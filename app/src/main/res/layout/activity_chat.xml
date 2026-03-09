@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 顶部栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <!-- 左侧按钮 -->
+        <ImageButton
+            android:id="@+id/btnSessionSelect"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@null"
+            android:src="@drawable/ic_session_select"/>
+
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/chatTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AI助手"
+            android:textSize="18sp"
+            android:gravity="center"/>
+    </LinearLayout>
+
+
+    <!-- 聊天内容区域 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"/>
+
+
+    <!-- 输入区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- 输入框 -->
+        <EditText
+            android:id="@+id/inputMessage"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:hint="输入消息"
+            android:background="@android:drawable/edit_text"/>
+
+        <!-- 发送按钮 -->
+        <ImageButton
+            android:id="@+id/btnSend"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:background="@null"
+            android:src="@drawable/ic_send"/>
+
+    </LinearLayout>
+
+</LinearLayout>
