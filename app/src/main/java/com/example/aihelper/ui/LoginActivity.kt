@@ -2,6 +2,7 @@ package com.example.aihelper.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -54,6 +55,7 @@ class LoginActivity : AppCompatActivity() {
                         val token = body.data.token
                         val sp = getSharedPreferences("user", MODE_PRIVATE)
                         sp.edit().putString("token", token).apply()
+                        Log.d("token", token)
                         Toast.makeText(
                             this@LoginActivity,
                             "登录成功",

@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
@@ -17,24 +18,31 @@ object RetrofitClient {
 
     private val client = OkHttpClient.Builder()
 
-        // 自动添加 Token
+        // 超时配置
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
+        .writeTimeout(60, TimeUnit.SECONDS)
+
         .addInterceptor { chain ->
 
             val sp = App.context.getSharedPreferences("user", Context.MODE_PRIVATE)
             val token = sp.getString("token", "")
 
-            val request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer $token")
-                .build()
+            android.util.Log.d("tokenInterceptor", token ?: "")
 
-            chain.proceed(request)
+            val builder = chain.request().newBuilder()
+
+            // 改为 token 请求头
+            if (!token.isNullOrEmpty()) {
+                builder.addHeader("token", token)
+            }
+
+            chain.proceed(builder.build())
         }
 
-        // 日志
         .addInterceptor(logging)
 
         .build()
-
 
     val apiService: ApiService by lazy {
 

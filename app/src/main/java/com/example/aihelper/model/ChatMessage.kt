@@ -1,4 +1,6 @@
 package com.example.aihelper.model
 
-class ChatMessage {
-}
+data class ChatMessage(
+    val role: String,   // user 或 assistant
+    var content: String
+)
