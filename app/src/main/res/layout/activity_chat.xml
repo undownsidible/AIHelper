@@ -33,6 +33,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+            <!-- 右侧日程按钮 -->
+            <ImageButton
+                android:id="@+id/btnSchedule"
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:background="@null"
+                android:src="@drawable/ic_schedule"/>
+
         </RelativeLayout>
 
         <!-- 聊天内容 -->

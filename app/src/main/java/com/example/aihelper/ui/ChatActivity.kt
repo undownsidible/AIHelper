@@ -1,5 +1,6 @@
 package com.example.aihelper.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -47,12 +48,18 @@ class ChatActivity : AppCompatActivity() {
         val btnMenu = findViewById<ImageButton>(R.id.btnMenu)
         val btnNewSession = findViewById<ImageButton>(R.id.btnNewSession)
 
+        val btnSchedule = findViewById<ImageButton>(R.id.btnSchedule)
+
         val btnSend = findViewById<ImageButton>(R.id.btnSend)
         val inputMessage = findViewById<EditText>(R.id.inputText)
 
         sessionRecyclerView = findViewById(R.id.sessionRecyclerView)
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
 
+        btnSchedule.setOnClickListener {
+            val intent = Intent(this@ChatActivity, ScheduleActivity::class.java)
+            startActivity(intent)
+        }
         // 打开左侧抽屉
         btnMenu.setOnClickListener {
             drawerLayout.openDrawer(Gravity.LEFT)
