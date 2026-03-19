@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.aihelper.R
 import com.example.aihelper.api.RetrofitClient
 import com.example.aihelper.model.LoginRequest
+import com.example.aihelper.util.request
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -18,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: Button
+    private lateinit var btnRegister: Button   // 新增
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -27,13 +29,19 @@ class LoginActivity : AppCompatActivity() {
         etUsername = findViewById(R.id.etUsername)
         etPassword = findViewById(R.id.etPassword)
         btnLogin = findViewById(R.id.btnLogin)
+        btnRegister = findViewById(R.id.btnRegister) // 新增
 
         btnLogin.setOnClickListener {
-
             val username = etUsername.text.toString()
             val password = etPassword.text.toString()
-
             login(username, password)
+        }
+
+        // 注册按钮点击事件
+        btnRegister.setOnClickListener {
+            startActivity(
+                Intent(this@LoginActivity, RegisterActivity::class.java)
+            )
         }
     }
 
@@ -41,54 +49,38 @@ class LoginActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
 
-            try {
+            request(
+                apiCall = {
+                    RetrofitClient.apiService.login(LoginRequest(username, password))
+                },
+                onSuccess = { data ->
+                    val token = data?.token ?: ""
 
-                val response = RetrofitClient.apiService.login(
-                    LoginRequest(username, password)
-                )
+                    val sp = getSharedPreferences("user", MODE_PRIVATE)
+                    sp.edit().putString("token", token).apply()
 
-                if (response.isSuccessful) {
-                    //返回成功
-                    val body = response.body()
-                    if (body?.code == 200) {
-                        //登录成功
-                        val token = body.data.token
-                        val sp = getSharedPreferences("user", MODE_PRIVATE)
-                        sp.edit().putString("token", token).apply()
-                        Log.d("token", token)
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "登录成功",
-                            Toast.LENGTH_SHORT).show()
+                    Log.d("token", token)
 
-                        val intent = Intent(this@LoginActivity, ChatActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }
-                    else{
-                        //登录失败
-                        Toast.makeText(this@LoginActivity,
-                            body?.message,
-                            Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    //返回失败
                     Toast.makeText(
                         this@LoginActivity,
-                        "登录失败",
+                        "登录成功",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    startActivity(
+                        Intent(this@LoginActivity, ChatActivity::class.java)
+                    )
+                    finish()
+                },
+
+                onError = { msg ->
+                    Toast.makeText(
+                        this@LoginActivity,
+                        msg,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
-            } catch (e: Exception) {
-
-                Toast.makeText(
-                    this@LoginActivity,
-                    e.message,
-                    Toast.LENGTH_LONG
-                ).show()
-
-            }
+            )
         }
     }
 }

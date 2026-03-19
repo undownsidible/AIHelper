@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aihelper.R
 import com.example.aihelper.model.ChatMessage
-import com.example.aihelper.model.ChatMessageListResponse
 
 class ChatAdapter(private val list: MutableList<ChatMessage>)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

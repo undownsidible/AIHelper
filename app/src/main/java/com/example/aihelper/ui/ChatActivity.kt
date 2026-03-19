@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
@@ -17,8 +18,8 @@ import com.example.aihelper.adapter.SessionAdapter
 import com.example.aihelper.api.RetrofitClient
 import com.example.aihelper.api.SSEClient
 import com.example.aihelper.model.ChatMessage
-import com.example.aihelper.model.ChatMessageListResponse
 import com.example.aihelper.model.Session
+import com.example.aihelper.util.request
 import kotlinx.coroutines.launch
 
 class ChatActivity : AppCompatActivity() {
@@ -116,20 +117,20 @@ class ChatActivity : AppCompatActivity() {
                 messageList.clear()
                 chatAdapter.notifyDataSetChanged()
 
-                //加载历史记录
+                // 加载历史记录
                 lifecycleScope.launch {
-                    val response = RetrofitClient.apiService.getMessageList(currentSessionId)
-                    if (response.isSuccessful) {
 
-                        val body = response.body()
-
-                        if (body?.code == 200) {
-                            messageList.addAll(body.data)
+                    request<List<ChatMessage>>(
+                        apiCall = { RetrofitClient.apiService.getMessageList(currentSessionId) },
+                        onSuccess = { data ->
+                            messageList.addAll(data ?: emptyList())
                             chatAdapter.notifyDataSetChanged()
+                        },
+                        onError = { msg ->
+                            Toast.makeText(this@ChatActivity, msg, Toast.LENGTH_SHORT).show()
                         }
-                    }
+                    )
                 }
-
             },
             onDelete = { session ->
 
@@ -147,20 +148,21 @@ class ChatActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
 
-            val response = RetrofitClient.apiService.getSessionList()
+            request(
+                apiCall = {
+                    RetrofitClient.apiService.getSessionList()
+                },
 
-            if (response.isSuccessful) {
-
-                val body = response.body()
-
-                if (body?.code == 200) {
-
+                onSuccess = { data ->
                     sessionList.clear()
-                    sessionList.addAll(body.data)
-
+                    sessionList.addAll(data ?: emptyList())
                     sessionAdapter.notifyDataSetChanged()
+                },
+
+                onError = { msg ->
+                    Toast.makeText(this@ChatActivity, msg, Toast.LENGTH_SHORT).show()
                 }
-            }
+            )
         }
     }
 
@@ -168,13 +170,21 @@ class ChatActivity : AppCompatActivity() {
     private fun createSession() {
 
         lifecycleScope.launch {
-
-            val response = RetrofitClient.apiService.createSession()
-
-            if (response.isSuccessful) {
-
-                loadSessions()
-            }
+            request(
+                apiCall = {
+                    RetrofitClient.apiService.createSession()
+                },
+                onSuccess = {
+                    loadSessions()
+                },
+                onError = { msg ->
+                    Toast.makeText(
+                        this@ChatActivity,
+                        msg,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            )
         }
     }
 
@@ -183,12 +193,26 @@ class ChatActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
 
-            val response = RetrofitClient.apiService.deleteSession(id)
-
-            if (response.isSuccessful) {
-
-                loadSessions()
-            }
+            request(
+                apiCall = {
+                    RetrofitClient.apiService.deleteSession(id)
+                },
+                onSuccess = {
+                    Toast.makeText(
+                        this@ChatActivity,
+                        "删除成功",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    loadSessions()
+                },
+                onError = { msg ->
+                    Toast.makeText(
+                        this@ChatActivity,
+                        msg,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            )
         }
     }
 

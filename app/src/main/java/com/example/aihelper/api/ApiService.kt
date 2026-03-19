@@ -10,40 +10,42 @@ interface ApiService {
     @POST("user/login")
     suspend fun login(
         @Body request: LoginRequest
-    ): Response<LoginResponse>
+    ): Response<Result<UserData>>
 
+    @POST("user/register")
+    suspend fun register(
+        @Body request: RegisterRequest
+    ): Response<Result<Any>>
 
     /** ================= 会话 ================= */
     @GET("session/list")
-    suspend fun getSessionList(): Response<SessionListResponse>
+    suspend fun getSessionList(): Response<Result<List<Session>>>
 
     @POST("session/create")
-    suspend fun createSession(): Response<Session>
+    suspend fun createSession(): Response<Result<Int>>
 
     @DELETE("session/delete/{id}")
     suspend fun deleteSession(
         @Path("id") id: Long
-    ): Response<Unit>
+    ): Response<Result<Any>>
 
 
     /** ================= 聊天 ================= */
     @POST("chat/send")
     suspend fun chat(
         @Body request: ChatRequest
-    ): Response<ChatResponse>
+    ): Response<Result<ChatMessage>>
 
     @GET("chat/list/{sessionId}")
     suspend fun getMessageList(
         @Path("sessionId") sessionId: Long
-    ): Response<ChatMessageListResponse>
+    ): Response<Result<List<ChatMessage>>>
 
     /** ================= 日程 ================= */
 
     /** 查询全部日程 */
     @GET("schedule/list")
-    suspend fun getScheduleList(
-        @Query("userId") userId: Long?
-    ): Response<Result<List<Schedule>>>
+    suspend fun getScheduleList(): Response<Result<List<Schedule>>>
 
     /** 查询今日日程 */
     @GET("schedule/today")

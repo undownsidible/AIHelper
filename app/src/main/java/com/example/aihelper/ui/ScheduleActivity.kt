@@ -58,7 +58,7 @@ class ScheduleActivity : AppCompatActivity() {
         lifecycleScope.launch {
 
             request(
-                apiCall = { RetrofitClient.apiService.getScheduleList(userId = 1) },
+                apiCall = { RetrofitClient.apiService.getScheduleList() },
                 onSuccess = { data ->
 
                     scheduleList.clear()

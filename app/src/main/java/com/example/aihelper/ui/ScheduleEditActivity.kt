@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.aihelper.R
 import com.example.aihelper.api.RetrofitClient
-import com.example.aihelper.model.Schedule
 import com.example.aihelper.model.ScheduleCreateRequest
 import com.example.aihelper.model.ScheduleUpdateRequest
 import com.example.aihelper.util.request
