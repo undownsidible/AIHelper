@@ -18,6 +18,7 @@ import com.example.aihelper.adapter.SessionAdapter
 import com.example.aihelper.api.RetrofitClient
 import com.example.aihelper.api.SSEClient
 import com.example.aihelper.model.ChatMessage
+import com.example.aihelper.model.ChatRequest
 import com.example.aihelper.model.Session
 import com.example.aihelper.util.request
 import kotlinx.coroutines.launch
@@ -78,7 +79,7 @@ class ChatActivity : AppCompatActivity() {
 
             chatRecyclerView.scrollToPosition(messageList.size - 1)
 
-            sendMessage(text)
+            streamChat(text)
 
             inputMessage.setText("")
         }
@@ -218,6 +219,34 @@ class ChatActivity : AppCompatActivity() {
 
     // 发送聊天消息
     private fun sendMessage(text: String) {
+        val request = ChatRequest(
+            sessionId = currentSessionId,
+            content = text
+        )
+
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.apiService.chat(request)
+
+                if (response.isSuccessful && response.body()?.code == 200) {
+
+                    val aiMessage = response.body()?.data
+                    if (aiMessage != null) {
+                        messageList.add(aiMessage)
+                        chatAdapter.notifyItemInserted(messageList.size - 1)
+                        chatRecyclerView.scrollToPosition(messageList.size - 1)
+                    }
+
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    // 流式回复
+    private fun streamChat(text: String){
 
         val sp = getSharedPreferences("user", MODE_PRIVATE)
         val token = sp.getString("token", "") ?: ""
