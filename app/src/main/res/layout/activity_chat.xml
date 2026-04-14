@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawerLayout"
+    android:background="#F5F7FA"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,69 +13,91 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- 顶部栏 -->
+        <!-- 顶部栏（企业风） -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="56dp"
+            android:background="#FFFFFF"
+            android:elevation="4dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
 
             <ImageButton
                 android:id="@+id/btnMenu"
-                android:layout_width="56dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="-1dp"
-                android:background="@null"
-                android:src="@drawable/ic_session_select" />
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_btn_primary"
+                android:src="@drawable/ic_session_select"/>
 
             <TextView
-                android:layout_centerInParent="true"
-                android:text="聊天"
+                android:text="AI 助手"
                 android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <!-- 右侧日程按钮 -->
             <ImageButton
                 android:id="@+id/btnSchedule"
-                android:layout_width="56dp"
-                android:layout_height="match_parent"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
-                android:background="@null"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_icon_btn"
                 android:src="@drawable/ic_schedule"/>
 
         </RelativeLayout>
 
-        <!-- 聊天内容 -->
+        <!-- 聊天内容（留白更舒服） -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chatRecyclerView"
+            android:padding="12dp"
+            android:clipToPadding="false"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
-        <!-- 输入栏 -->
-        <RelativeLayout
+        <!-- 输入区域（卡片风） -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:background="#F5F7FA">
 
-            <EditText
-                android:id="@+id/inputText"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_toStartOf="@id/btnSend"/>
+                android:layout_height="56dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="8dp">
 
-            <ImageButton
-                android:id="@+id/btnSend"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_send"
-                android:background="@null"/>
+                <EditText
+                    android:id="@+id/inputText"
+                    android:hint="输入消息..."
+                    android:textColor="#333333"
+                    android:textSize="14sp"
+                    android:background="@drawable/bg_input_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toStartOf="@id/btnSend"/>
 
-        </RelativeLayout>
+                <ImageButton
+                    android:id="@+id/btnSend"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="0dp"
+                    android:background="@drawable/bg_btn_primary"
+                    android:src="@drawable/ic_send" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!-- 引入侧边栏 -->
+    <!-- 侧边栏 -->
     <include
         layout="@layout/layout_session_drawer"/>
 

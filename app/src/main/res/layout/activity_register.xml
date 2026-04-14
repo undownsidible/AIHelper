@@ -1,49 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:background="#F5F7FA"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 顶部返回按钮 -->
-    <TextView
-        android:id="@+id/btnBack"
-        android:text="← 返回"
-        android:textSize="16sp"
-        android:textColor="#000"
-        android:padding="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <!-- 顶部栏 -->
+    <RelativeLayout
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <!-- 内容区域 -->
+        <TextView
+            android:id="@+id/btnBack"
+            android:text="←"
+            android:textSize="20sp"
+            android:textColor="#333333"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="注册账号"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <!-- 中间卡片 -->
     <LinearLayout
         android:orientation="vertical"
-        android:gravity="center"
+        android:padding="24dp"
+        android:background="@drawable/bg_card"
+        android:elevation="6dp"
+        android:layout_margin="24dp"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
+        <!-- 用户名 -->
         <EditText
             android:id="@+id/etUsername"
             android:hint="用户名"
+            android:padding="12dp"
+            android:background="@drawable/bg_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="48dp"/>
 
+        <!-- 密码 -->
         <EditText
             android:id="@+id/etPassword"
             android:hint="密码"
             android:inputType="textPassword"
+            android:padding="12dp"
             android:layout_marginTop="16dp"
+            android:background="@drawable/bg_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="48dp"/>
 
+        <!-- 注册按钮 -->
         <Button
             android:id="@+id/btnRegister"
             android:text="注册"
+            android:textColor="#000000"
+            android:textStyle="bold"
             android:layout_marginTop="24dp"
+            android:background="@drawable/bg_btn_primary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="48dp"/>
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

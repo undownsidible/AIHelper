@@ -1,48 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center"
+    android:background="#F5F7FA"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/etUsername"
-        android:hint="用户名"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <EditText
-        android:id="@+id/etPassword"
-        android:hint="密码"
-        android:inputType="textPassword"
-        android:layout_marginTop="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <!-- 按钮区域 -->
+    <!-- 中间卡片 -->
     <LinearLayout
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@drawable/bg_card"
+        android:elevation="6dp"
+        android:layout_margin="24dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btnRegister"
-            android:text="注册"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"/>
+        <!-- 标题 -->
+        <TextView
+            android:text="欢迎登录"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
+        <!-- 用户名 -->
+        <EditText
+            android:id="@+id/etUsername"
+            android:hint="用户名"
+            android:padding="12dp"
+            android:background="@drawable/bg_input"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
+
+        <!-- 密码 -->
+        <EditText
+            android:id="@+id/etPassword"
+            android:hint="密码"
+            android:inputType="textPassword"
+            android:padding="12dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_input"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
+
+        <!-- 登录按钮（主按钮） -->
         <Button
             android:id="@+id/btnLogin"
             android:text="登录"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_btn_primary"
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
+
+        <!-- 注册按钮（次按钮） -->
+        <Button
+            android:id="@+id/btnRegister"
+            android:text="注册账号"
+            android:textColor="#3B82F6"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
