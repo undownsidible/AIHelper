@@ -18,13 +18,22 @@ interface ApiService {
     ): Response<Result<Any>>
 
     /** ================= 会话 ================= */
-    @GET("session/list")
+    // 查询会话列表
+    @GET("sessions")
     suspend fun getSessionList(): Response<Result<List<Session>>>
 
-    @POST("session/create")
-    suspend fun createSession(): Response<Result<Int>>
+    // 创建会话
+    @POST("sessions")
+    suspend fun createSession(): Response<Result<Long>>
 
-    @DELETE("session/delete/{id}")
+    // 修改会话名称（新增）
+    @PUT("sessions")
+    suspend fun updateSessionName(
+        @Body dto: SessionUpdateRequest
+    ): Response<Result<Any>>
+
+    // 删除会话
+    @DELETE("sessions/{id}")
     suspend fun deleteSession(
         @Path("id") id: Long
     ): Response<Result<Any>>

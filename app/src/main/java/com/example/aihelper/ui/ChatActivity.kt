@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,7 @@ import com.example.aihelper.api.SSEClient
 import com.example.aihelper.model.ChatMessage
 import com.example.aihelper.model.ChatRequest
 import com.example.aihelper.model.Session
+import com.example.aihelper.model.SessionUpdateRequest
 import com.example.aihelper.util.request
 import kotlinx.coroutines.launch
 
@@ -70,18 +72,22 @@ class ChatActivity : AppCompatActivity() {
         btnSend.setOnClickListener {
 
             val text = inputMessage.text.toString()
+            if (text.isEmpty()) return@setOnClickListener
 
-            if (text.isEmpty() || currentSessionId == -1L) return@setOnClickListener
+            inputMessage.setText("") // ✅ 提前清空，避免重复输入
 
-            // 添加用户消息
+            // 没有会话 → 创建并发送
+            if (currentSessionId == -1L) {
+                createSessionAndSend(text)
+                return@setOnClickListener
+            }
+
+            // 正常发送
             messageList.add(ChatMessage("user", text))
             chatAdapter.notifyItemInserted(messageList.size - 1)
-
             chatRecyclerView.scrollToPosition(messageList.size - 1)
 
             streamChat(text)
-
-            inputMessage.setText("")
         }
         // 新建会话
         btnNewSession.setOnClickListener {
@@ -137,6 +143,29 @@ class ChatActivity : AppCompatActivity() {
 
                 deleteSession(session.id)
 
+            },
+            onRename = { session ->
+
+                val editText = EditText(this@ChatActivity)
+                editText.setText(session.title)
+                editText.setSelection(session.title.length)
+
+                AlertDialog.Builder(this@ChatActivity)
+                    .setTitle("重命名会话")
+                    .setView(editText)
+                    .setPositiveButton("确定") { _, _ ->
+
+                        val newName = editText.text.toString().trim()
+                        if (newName.isEmpty()) {
+                            Toast.makeText(this@ChatActivity, "名称不能为空", Toast.LENGTH_SHORT).show()
+                            return@setPositiveButton
+                        }
+
+                        // 调接口更新
+                        updateSchedule(session.id, newName)
+                    }
+                    .setNegativeButton("取消", null)
+                    .show()
             }
         )
 
@@ -176,6 +205,72 @@ class ChatActivity : AppCompatActivity() {
                     RetrofitClient.apiService.createSession()
                 },
                 onSuccess = {
+                    loadSessions()
+                },
+                onError = { msg ->
+                    Toast.makeText(
+                        this@ChatActivity,
+                        msg,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            )
+        }
+
+    }
+
+    //创建会话并发送
+    private fun createSessionAndSend(text: String) {
+
+        lifecycleScope.launch {
+
+            request<Long>(
+                apiCall = {
+                    RetrofitClient.apiService.createSession()
+                },
+                onSuccess = { id ->
+
+                    if (id == null) return@request
+
+                    // 1️⃣ 设置当前会话ID
+                    currentSessionId = id
+
+                    // 2️⃣ 刷新列表（异步，不阻塞发送）
+                    loadSessions()
+
+                    // 3️⃣ 添加用户消息
+                    messageList.add(ChatMessage("user", text))
+                    chatAdapter.notifyItemInserted(messageList.size - 1)
+                    chatRecyclerView.scrollToPosition(messageList.size - 1)
+
+                    // 4️⃣ 发送
+                    streamChat(text)
+                },
+                onError = { msg ->
+                    Toast.makeText(this@ChatActivity, msg, Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
+    }
+
+    //更新会话
+    // ===================== 新增：修改会话名称/日程 =====================
+    private fun updateSchedule(sessionId: Long, newName: String) {
+        // 构建请求体
+        val dto = SessionUpdateRequest(id = sessionId, sessionName = newName)
+
+        lifecycleScope.launch {
+            request(
+                apiCall = {
+                    RetrofitClient.apiService.updateSessionName(dto)
+                },
+                onSuccess = {
+                    Toast.makeText(
+                        this@ChatActivity,
+                        "修改成功",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    // 修改后刷新会话列表
                     loadSessions()
                 },
                 onError = { msg ->
@@ -277,7 +372,7 @@ class ChatActivity : AppCompatActivity() {
 
             onComplete = {
                 runOnUiThread {
-                    android.util.Log.d("SSE", "AI回复完成")
+                    Log.d("SSE", "AI回复完成")
                 }
             }
         )
