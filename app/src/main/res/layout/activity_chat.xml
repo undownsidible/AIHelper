@@ -31,7 +31,7 @@
                 android:src="@drawable/ic_session_select"/>
 
             <TextView
-                android:text="AI 助手"
+                android:text="日程助手"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#333333"
